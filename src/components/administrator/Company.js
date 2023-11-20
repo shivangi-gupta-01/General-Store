@@ -5,10 +5,13 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useStyles } from './CompanyCss';
 import { getData, postData } from '../services/ServerServices';
-import { AssistWalkerOutlined } from "@mui/icons-material";
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export default function Company(props) {
+    var navigate = useNavigate();
+    // All states to set input values
     const [showPassword, setShowPassword] = useState(false);
     const [state, setState] = useState('')
     const [city, setCity] = useState('')
@@ -21,6 +24,7 @@ export default function Company(props) {
     const [companyLogo, setCompanyLogo] = useState({ filename: '/assets/water.png', bytes: '' })
     const [states, setStates] = useState([])
     const [cities, setCities] = useState([])
+    const [error, setError] = useState({})
 
     var classes = useStyles()
     const fetchstates = async () => {
@@ -31,7 +35,47 @@ export default function Company(props) {
         fetchstates()
     }, [])
 
+    const handleError = (inputs, value) => {
+        setError(prev => ({ ...prev, [inputs]: value }))
 
+    }
+    const validation = () => {
+        var isValid = true
+        if (companyName == '') {
+
+            handleError("companyName", "Invalid Company Name")
+            isValid = false
+        }
+        if (!ownerName) {
+            handleError("ownerName", "Invalid Owner Name")
+            isValid = false
+        }
+        if (!mobileNumber || !(/^[0-9]{10}$/.test(mobileNumber))) {
+            handleError("mobileNumber", "Invalid Mobile Number")
+            isValid = false
+        }
+        if (!emailAddress || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress))) {
+            handleError("emailAddress", "Invaild Email Address")
+            isValid = false
+        }
+        if (!address) {
+            handleError("address", "Please Input Address")
+            isValid = false
+        }
+        if (!state || state == "Choose State...") {
+            handleError("state", "Please Choose state")
+            isValid = false
+        }
+        if (!city || city == "Choose City...") {
+            handleError("city", "Please Choose City")
+            isValid = false
+        }
+        if (!password) {
+            handleError("password", "Please Enter Password")
+            isValid = false
+        }
+        return isValid
+    }
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -62,10 +106,10 @@ export default function Company(props) {
         setState(event.target.value)
         fetchcity(event.target.value)
     }
-    const handlecityChange=(event)=>{
+    const handlecityChange = (event) => {
         setCity(event.target.value)
     }
-    const clearValue=()=>{
+    const clearValue = () => {
         setCompanyName('')
         setOwnerName('')
         setEmailAddress('')
@@ -74,41 +118,43 @@ export default function Company(props) {
         setPassword('')
         setCity('Choose City...')
         setState('Choose State...')
-        setCompanyLogo({filename: '/assets/water.png', bytes: ''})
+        setCompanyLogo({ filename: '/assets/water.png', bytes: '' })
     }
-    const handleClick=async()=>{
-        var cd= new Date()
-        var dd= cd.getFullYear()+"/"+(cd.getMonth()+1)+"/"+cd.getDate()+" "+cd.getHours()+":"+cd.getMinutes()+":" +cd.getSeconds()
-        var formData= new FormData()
-        formData.append('companyname',companyName)
-        formData.append('ownername',ownerName)
-        formData.append('emailaddress',emailAddress)
-        formData.append('mobilenumber',mobileNumber)
-        formData.append('address',address)
-        formData.append('state',state)
-        formData.append('city',city)
-        formData.append('password',password)
-        formData.append('logo',companyLogo.bytes)
-        formData.append('createdat',dd)
-        formData.append('updateat', dd)
-        formData.append('createdby','ADMIN')
-        formData.append('status','pending')
-        var result = await postData ('company/add_new_company',formData)
-        
-        if(result.status){
-            Swal.fire({
-                icon: 'success',
-                title: result.message,
-              })
+    const handleClick = async () => {
+        if (validation()) {
+            var cd = new Date()
+            var dd = cd.getFullYear() + "/" + (cd.getMonth() + 1) + "/" + cd.getDate() + " " + cd.getHours() + ":" + cd.getMinutes() + ":" + cd.getSeconds()
+            var formData = new FormData()
+            formData.append('companyname', companyName)
+            formData.append('ownername', ownerName)
+            formData.append('emailaddress', emailAddress)
+            formData.append('mobilenumber', mobileNumber)
+            formData.append('address', address)
+            formData.append('state', state)
+            formData.append('city', city)
+            formData.append('password', password)
+            formData.append('logo', companyLogo.bytes)
+            formData.append('createdat', dd)
+            formData.append('updateat', dd)
+            formData.append('createdby', 'ADMIN')
+            formData.append('status', 'Pending')
+            var result = await postData('company/add_new_company', formData)
+
+            if (result.status) {
+                Swal.fire({
+                    icon: 'success',
+                    title: result.message,
+                })
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: result.message,
+                })
+
+            }
+            clearValue()
         }
-        else{
-            Swal.fire({
-                icon: 'error',
-                title: result.message,
-              })
-            
-        }
-        clearValue()
     }
 
 
@@ -118,27 +164,30 @@ export default function Company(props) {
 
                 <Grid container spacing={2}>
                     <Grid item xs={12} className={classes.rowStyle}>
-                        <div><img src="/assets/logo.png" width="40" /></div>
-                        <div className={classes.headingStyle}>Company registration</div>
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div><img src="/assets/logo.png" width="40" /></div>
+                            <div className={classes.headingStyle}>Company registration</div>
+                        </div>
+                        <div><FormatListBulletedIcon onClick={() => navigate('/displayAllCompanies')} /></div>
                     </Grid>
                     <Grid item xs={6}>
-                        <TextField value={companyName} fullWidth onChange={(event) => setCompanyName(event.target.value)} label="Company Name" variant="outlined" />
-                    </Grid>
-
-                    <Grid item xs={6}>
-                        <TextField fullWidth value={ownerName} onChange={(event) => setOwnerName(event.target.value)} label="Owner Name" variant="outlined" />
-                    </Grid>
-
-                    <Grid item xs={6}>
-                        <TextField fullWidth value={emailAddress} onChange={(event) => setEmailAddress(event.target.value)} label="Email address" variant="outlined" />
+                        <TextField error={!error.companyName ? false : true} helperText={error.companyName} onFocus={() => handleError("companyName", null)} value={companyName} fullWidth onChange={(event) => setCompanyName(event.target.value)} label="Company Name" variant="outlined" />
                     </Grid>
 
                     <Grid item xs={6}>
-                        <TextField fullWidth value={mobileNumber} onChange={(event) => setMobileNumber(event.target.value)} label="Mobile Number" variant="outlined" />
+                        <TextField fullWidth error={!error.ownerName ? false : true} helperText={error.ownerName} onFocus={() => handleError("ownerName", null)} value={ownerName} onChange={(event) => setOwnerName(event.target.value)} label="Owner Name" variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <TextField fullWidth error={!error.emailAddress ? false : true} helperText={error.emailAddress} onFocus={() => handleError("emailAddress", null)} value={emailAddress} onChange={(event) => setEmailAddress(event.target.value)} label="Email address" variant="outlined" />
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <TextField error={!error.mobileNumber ? false : true} helperText={error.mobileNumber} fullWidth value={mobileNumber} onChange={(event) => setMobileNumber(event.target.value)} label="Mobile Number" variant="outlined" />
                     </Grid>
 
                     <Grid item xs={12}>
-                        <TextField fullWidth value={address} onChange={(event) => setAddress(event.target.value)} label="Address" variant="outlined" />
+                        <TextField fullWidth error={!error.address ? false : true} helperText={error.address} onFocus={() => handleError('address', null)} value={address} onChange={(event) => setAddress(event.target.value)} label="Address" variant="outlined" />
                     </Grid>
 
                     <Grid item xs={6}>
@@ -150,10 +199,13 @@ export default function Company(props) {
                                 value={state}
                                 label="State"
                                 onChange={handlestateChange}
+                                error={!error.state ? false : true}
+                                onFocus={() => handleError('state', null)}
                             >
                                 <MenuItem value={'Choose State...'}>Choose State...</MenuItem>
                                 {fillstate()}
                             </Select>
+                            <div style={{ fontSize: 12, padding: 5, color: 'red', }}>{error.state}</div>
                         </FormControl>
                     </Grid>
 
@@ -165,16 +217,19 @@ export default function Company(props) {
                                 id="demo-simple-select"
                                 value={city}
                                 label="City"
-                            onChange={handlecityChange}
+                                onChange={handlecityChange}
+                                error={!error.city ? false : true}
+                                onFocus={() => handleError('city', null)}
                             >
                                 <MenuItem value={'Choose City...'}>Choose City...</MenuItem>
                                 {fillcities()}
                             </Select>
+                            <div style={{ fontSize: 12, padding: 5, color: 'red', }}>{error.city}</div>
                         </FormControl>
                     </Grid>
 
                     <Grid item xs={6} className={classes.rowStyle}>
-                        <IconButton fullWidth color="primary" arial-label="Upload Picture" component="label">
+                        <IconButton style={{display:'flex', justifyContent:'space-between',flexDirection:'row',width:'100%'}} fullWidth color="primary" arial-label="Upload Picture" component="label">
                             <input hidden accept="image/*" type="file" onChange={handleImage} />
                             <PhotoCamera />
                             <Avatar
@@ -194,6 +249,8 @@ export default function Company(props) {
                                 value={password}
                                 type={showPassword ? 'text' : 'password'}
                                 onChange={(event) => setPassword(event.target.value)}
+                                onFocus={() => handleError('password', null)}
+                                error={!error.password ? false : true}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -209,6 +266,7 @@ export default function Company(props) {
                                 }
                                 label="Password" />
                         </FormControl>
+                        <div style={{ fontSize: 12, padding: 5, color: 'red', }}>{error.city}</div>
                     </Grid>
                     <Grid item xs={6}>
                         <Button fullWidth onClick={handleClick} variant="contained">Submit</Button>
