@@ -12,12 +12,14 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { postData } from '../services/ServerServices';
+import { useState } from 'react';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://the7shades.in/">
+      <Link color="inherit" href="http://the7shades.in/">
         the7shades
       </Link>{' '}
       {new Date().getFullYear()}
@@ -31,13 +33,12 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function AdminLogin() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const [emailAddress, setEmailAddress] = useState('')
+  const [password, setPassword] = useState('')
+  const handleClick = async () => {
+    var body = { emailaddress: emailAddress, password: password }
+    var result = await postData('company/chk_company_login', body)
+    alert(result.status)
   };
 
   return (
@@ -74,7 +75,7 @@ export default function AdminLogin() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -84,6 +85,7 @@ export default function AdminLogin() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={(event) => setEmailAddress(event.target.value)}
               />
               <TextField
                 margin="normal"
@@ -94,16 +96,19 @@ export default function AdminLogin() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(event) => setPassword(event.target.value)}
               />
+
               <Button
-                type="submit"
+                type="button"
                 fullWidth
+                onClick={() => handleClick()}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
                 Sign In
               </Button>
-              
+
               <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>

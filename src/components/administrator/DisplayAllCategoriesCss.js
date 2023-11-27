@@ -2,7 +2,7 @@ import { makeStyles } from "@mui/styles";
 export const useStyles=makeStyles({
     maincontainer:{
         display: 'flex',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center',
         background: '#dfe6e9',
         width: '100vw',
@@ -10,7 +10,7 @@ export const useStyles=makeStyles({
     },
     box:{
         padding: 20,
-        margin: 10,
+        margin: 30,
         background: '#fff',
         width: "75%",
         borderRadius:10
