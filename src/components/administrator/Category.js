@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Select, MenuItem, Avatar, TextField, Button, Grid, IconButton, FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material"
+import {Avatar, TextField, Button, Grid, IconButton, FormControl, InputLabel, OutlinedInput, InputAdornment, Tooltip } from "@mui/material"
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { useStyles } from './CompanyCss';
+import { useStyles } from './CategoryCss';
 import { getData, postData } from '../services/ServerServices';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { useNavigate } from "react-router-dom";
@@ -37,7 +37,7 @@ export default function Category(props) {
         return isValid
     }
 
-
+    var admin = JSON.parse(localStorage.getItem('ADMIN'))
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
@@ -94,10 +94,10 @@ export default function Category(props) {
                             <div><img src="/assets/logo.png" width="40" /></div>
                             <div className={classes.headingStyle}>Category registration</div>
                         </div>
-                        <div><FormatListBulletedIcon onClick={() => navigate('/displayAllCompanies')} /></div>
+                        <div><Tooltip title="Category List"><FormatListBulletedIcon onClick={() => navigate('/dashboard/displayAllCategories')} /></Tooltip></div>
                     </Grid>
                     <Grid item xs={6}>
-                        <TextField error={!error.companyId ? false : true} helperText={error.companyId} onFocus={() => handleError("companyId", null)} value={companyId} fullWidth onChange={(event) => setCompanyId(event.target.value)} label="Company Id" variant="outlined" />
+                        <TextField error={!error.companyId ? false : true} helperText={error.companyId} onFocus={() => handleError("companyId", null)} value={admin.companyid} fullWidth onChange={(event) => setCompanyId(event.target.value)} label="Company Id" variant="outlined" />
                     </Grid>
 
                     <Grid item xs={6}>

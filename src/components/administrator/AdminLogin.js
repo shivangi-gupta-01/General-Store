@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { postData } from '../services/ServerServices';
 import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -32,13 +32,18 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function AdminLogin() {
+export default function AdminLogin(props) {
+  var navigate = useNavigate()
   const [emailAddress, setEmailAddress] = useState('')
   const [password, setPassword] = useState('')
   const handleClick = async () => {
     var body = { emailaddress: emailAddress, password: password }
     var result = await postData('company/chk_company_login', body)
     alert(result.status)
+    if(result.status){
+      localStorage.setItem("ADMIN",JSON.stringify(result.data))
+      navigate('/dashboard')
+    }
   };
 
   return (

@@ -238,7 +238,7 @@ export default function DisplayAllCategories(props) {
             icon: 'add',
             isFreeAction:true,
             tooltip:'Add Category',
-            onClick :(event)=> navigate('/category')
+            onClick :(event)=> navigate('/dashboard/category')
           },
           {
             icon: 'edit',

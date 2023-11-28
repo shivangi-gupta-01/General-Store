@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Select, MenuItem, Avatar, TextField, Button, Grid, IconButton, FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material"
+import { Select,Tooltip, MenuItem, Avatar, TextField, Button, Grid, IconButton, FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material"
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -168,7 +168,7 @@ export default function Company(props) {
                             <div><img src="/assets/logo.png" width="40" /></div>
                             <div className={classes.headingStyle}>Company registration</div>
                         </div>
-                        <div><FormatListBulletedIcon onClick={() => navigate('/displayAllCompanies')} /></div>
+                        <div><Tooltip title="Company List"><FormatListBulletedIcon onClick={() => navigate('/displayAllCompanies')} /></Tooltip></div>
                     </Grid>
                     <Grid item xs={6}>
                         <TextField error={!error.companyName ? false : true} helperText={error.companyName} onFocus={() => handleError("companyName", null)} value={companyName} fullWidth onChange={(event) => setCompanyName(event.target.value)} label="Company Name" variant="outlined" />

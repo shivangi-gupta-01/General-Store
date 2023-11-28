@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminLogin from "./components/administrator/AdminLogin";
 import ListProducts from "./components/administrator/ListProducts"
 import DashBoard from "./components/administrator/DashBoard";
+import Home from "./components/userinterface/screens/Home";
 function App() {
   return (
     <div>
@@ -14,12 +15,13 @@ function App() {
         <Routes>
           <Route element={<Company />} path={"/company"} />
           <Route element={<DisplayAllCompanies />} path={"/displayallcompanies"} />
-          <Route element={<Category />} path={"/category"} />
+          
           <Route element={<Product />} path={"/product"}></Route>
           <Route element={<DisplayAllProducts />} path={"/displayallproducts"}></Route>
           <Route element={<AdminLogin />} path={"/adminlogin"} />
           <Route element={<ListProducts />} path={"/listproducts"} />
           <Route element={<DashBoard />} path={"/dashboard/*"} />
+          <Route element={<Home />} path={"/home"} />
         </Routes>
       </Router>
     </div>
