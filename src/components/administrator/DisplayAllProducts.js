@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MaterialTable from "@material-table/core";
 import { ServerURL, getData, postData } from "../services/ServerServices";
 import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Select, MenuItem, TextField, Grid, IconButton, FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
-import { useStyles } from './DisplayAllCompaniesCss';
+import { useStyles } from './DisplayAllCompaniesCSS';
 import { useNavigate } from "react-router-dom";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Swal from "sweetalert2";
